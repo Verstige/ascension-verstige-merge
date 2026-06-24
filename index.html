@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ascension & Verstige OS Merge — Strategy Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ============== VERSTIGE OS DESIGN SYSTEM ============== */
+  :root {
+    --font-outfit: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-jetbrains: "JetBrains Mono", monospace;
+    --font-main: var(--font-outfit);
+    --font-mono: var(--font-jetbrains);
+
+    --bg-dark: #050507;
+    --bg-card: rgba(18, 18, 18, 0.7);
+    --bg-elevated: rgba(30, 30, 30, 0.8);
+    --primary: #ffffff;
+    --secondary: #94949e;
+    --accent: #2997ff;
+    --fintech-green: #30d158;
+    --fintech-red: #ff453a;
+    --hero-purple: #7a3e9d;
+    --hero-blue: #4a8cff;
+    --hero-gradient: linear-gradient(90deg, #4a8cff 0%, #a259ff 100%);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 48px;
+    --spacing-2xl: 96px;
+    --border-radius-sm: 8px;
+    --border-radius-md: 16px;
+    --border-radius-lg: 24px;
+    --border-radius-full: 9999px;
+    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg-dark);
+    color: var(--primary);
+    font-family: var(--font-main);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    line-height: 1.5;
+    scroll-snap-type: y mandatory;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  /* ============== DECK NAV ============== */
+  .deck-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(5, 5, 7, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .deck-nav .brand {
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    font-size: 0.95rem;
+    background: var(--hero-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .deck-nav .progress {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--secondary);
+  }
+  .deck-nav .progress-bar {
+    width: 200px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-left: 16px;
+  }
+  .deck-nav .progress-fill {
+    height: 100%;
+    background: var(--hero-gradient);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  /* ============== SLIDE FRAME ============== */
+  section.slide {
+    min-height: 100vh;
+    padding: 120px 64px 64px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .slide-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .slide-title {
+    font-size: 3.5rem;
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+    max-width: 900px;
+  }
+
+  .slide-subtitle {
+    font-size: 1.25rem;
+    color: var(--secondary);
+    max-width: 800px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
+
+  .slide-subheader {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--secondary);
+    margin-top: 32px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--glass-border);
+  }
+
+  .gradient-text {
+    background: var(--hero-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .accent-text { color: var(--accent); }
+  .green-text { color: var(--fintech-green); }
+  .muted-text { color: var(--secondary); }
+
+  /* ============== GLASS PRIMITIVES ============== */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-lg);
+    padding: 32px;
+    transition: var(--transition-smooth);
+  }
+  .glass-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-4px);
+  }
+  .glass-panel {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--glass-shadow);
+    padding: 32px;
+  }
+
+  /* ============== GRIDS ============== */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+
+  /* ============== CARDS ============== */
+  .pair-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--border-radius-md);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .pair-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--hero-gradient);
+    opacity: 0.6;
+  }
+  .pair-symbol {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .pair-strategy {
+    font-size: 0.95rem;
+    color: var(--secondary);
+    line-height: 1.4;
+  }
+  .pair-tag {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    padding: 4px 10px;
+    border: 1px solid rgba(41, 151, 255, 0.3);
+    border-radius: var(--border-radius-full);
+  }
+
+  /* ============== STAT BLOCKS ============== */
+  .stat-block { text-align: left; }
+  .stat-value {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 8px;
+    background: var(--hero-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-value-sm {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 8px;
+    background: var(--hero-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--secondary);
+  }
+
+  /* ============== TABLE ============== */
+  .styled-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.95rem;
+  }
+  .styled-table thead th {
+    text-align: left;
+    padding: 16px 20px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .styled-table tbody td {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  .styled-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+  .pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: var(--border-radius-full);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .pill-free { background: rgba(148, 148, 158, 0.15); color: var(--secondary); }
+  .pill-pro  { background: rgba(41, 151, 255, 0.15); color: var(--accent); }
+  .pill-elite { background: linear-gradient(90deg, rgba(74, 140, 255, 0.2), rgba(162, 89, 255, 0.2)); color: #d4b3ff; }
+  .pill-green { background: rgba(48, 209, 88, 0.15); color: var(--fintech-green); }
+  .pill-amber { background: rgba(255, 159, 10, 0.15); color: #ff9f0a; }
+  .pill-red { background: rgba(255, 69, 58, 0.15); color: var(--fintech-red); }
+
+  /* ============== BUTTONS ============== */
+  .btn-primary {
+    background: var(--primary);
+    color: var(--bg-dark);
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: var(--border-radius-full);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition-smooth);
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 255, 255, 0.3); }
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--primary);
+    font-weight: 500;
+    padding: 14px 28px;
+    border-radius: var(--border-radius-full);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    transition: var(--transition-smooth);
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+
+  /* ============== FUNNEL ============== */
+  .funnel { display: flex; flex-direction: column; gap: 12px; }
+  .funnel-step {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--border-radius-sm);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .funnel-step .step-num {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 0.85rem;
+    margin-right: 16px;
+  }
+  .funnel-step .step-label { flex: 1; font-size: 0.95rem; }
+  .funnel-step .step-meta {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--secondary);
+  }
+
+  /* ============== TIMELINE ============== */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent), var(--hero-purple));
+  }
+  .timeline-item { position: relative; padding-bottom: 32px; }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -29px; top: 6px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 12px rgba(41, 151, 255, 0.5);
+  }
+  .timeline-week {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .timeline-content { font-size: 1rem; color: var(--primary); line-height: 1.5; }
+
+  /* ============== LISTS ============== */
+  .check-list { list-style: none; }
+  .check-list li {
+    padding: 12px 0 12px 32px;
+    position: relative;
+    color: var(--secondary);
+    line-height: 1.5;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  .check-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .check-list li:last-child { border-bottom: none; }
+  .check-list strong { color: var(--primary); font-weight: 500; }
+
+  .framework-list { list-style: none; }
+  .framework-list li {
+    padding: 18px 0 18px 0;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .framework-list li:last-child { border-bottom: none; }
+  .framework-list .fw-title {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 0.95rem;
+  }
+  .framework-list .fw-desc {
+    color: var(--secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* ============== BADGES ============== */
+  .badge-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--border-radius-full);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  .badge-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .badge-bronze .badge-dot { background: #cd7f32; }
+  .badge-silver .badge-dot { background: #c0c0c0; }
+  .badge-gold .badge-dot { background: #ffd700; }
+  .badge-platinum .badge-dot { background: var(--hero-gradient); }
+
+  /* ============== HERO ============== */
+  .slide-hero { text-align: left; padding-top: 160px; }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-full);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--secondary);
+    margin-bottom: 32px;
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--fintech-green);
+    box-shadow: 0 0 8px var(--fintech-green);
+  }
+  .hero-title {
+    font-size: 5.5rem;
+    line-height: 0.95;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-bottom: 32px;
+    max-width: 1100px;
+  }
+  .hero-sub {
+    font-size: 1.5rem;
+    color: var(--secondary);
+    line-height: 1.5;
+    max-width: 800px;
+    margin-bottom: 48px;
+  }
+  .hero-cta-row { display: flex; gap: 16px; align-items: center; }
+
+  /* ============== DIVIDER ============== */
+  .divider { width: 60px; height: 2px; background: var(--hero-gradient); margin: 24px 0; }
+
+  /* ============== SIGNAL CARD ============== */
+  .signal-card {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-md);
+    padding: 28px;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    position: relative;
+  }
+  .signal-card .signal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .signal-card .signal-pair {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary);
+  }
+  .signal-card .signal-dir {
+    font-size: 0.85rem;
+    padding: 4px 10px;
+    border-radius: var(--border-radius-full);
+  }
+  .signal-card .signal-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+  }
+  .signal-card .signal-label { color: var(--secondary); }
+  .signal-card .signal-value { color: var(--primary); font-weight: 500; }
+  .signal-card .signal-foot {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: space-between;
+    color: var(--secondary);
+    font-size: 0.8rem;
+  }
+  .signal-card .score-pill {
+    background: linear-gradient(90deg, rgba(74, 140, 255, 0.2), rgba(162, 89, 255, 0.2));
+    color: #d4b3ff;
+    padding: 4px 10px;
+    border-radius: var(--border-radius-full);
+    font-size: 0.75rem;
+  }
+
+  /* ============== PLATFORM TILES ============== */
+  .platform-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .platform-tile {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-sm);
+    padding: 14px 16px;
+  }
+  .platform-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+    background: var(--hero-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .platform-role {
+    font-size: 0.8rem;
+    color: var(--secondary);
+    line-height: 1.4;
+  }
+
+  /* ============== OS LAYER STACK ============== */
+  .os-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .os-layer {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--border-radius-lg);
+    padding: 32px;
+    position: relative;
+    transition: var(--transition-smooth);
+  }
+  .os-layer:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+  .os-layer-flow {
+    border-left: 3px solid #a259ff;
+  }
+  .os-layer-algo {
+    border-left: 3px solid #4a8cff;
+  }
+  .os-layer-zone {
+    border-left: 3px solid var(--accent);
+  }
+  .os-layer-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .os-layer-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--secondary);
+    margin-bottom: 8px;
+  }
+  .os-layer-name {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .os-layer-desc {
+    color: var(--secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-width: 500px;
+  }
+  .os-layer-price {
+    text-align: right;
+  }
+  .os-layer-feats {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 8px 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--glass-border);
+  }
+  .os-layer-feats li {
+    padding: 6px 0 6px 20px;
+    position: relative;
+    color: var(--secondary);
+    font-size: 0.9rem;
+  }
+  .os-layer-feats li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .zone-inner {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: var(--border-radius-md);
+    padding: 24px;
+  }
+
+  /* ============== PRICING CARDS ============== */
+  .pricing-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--border-radius-lg);
+    padding: 32px 24px;
+    text-align: left;
+    position: relative;
+    transition: var(--transition-smooth);
+  }
+  .pricing-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+  .pricing-card.featured {
+    border-color: var(--accent);
+    background: linear-gradient(180deg, rgba(41, 151, 255, 0.05), rgba(255, 255, 255, 0.02));
+  }
+  .pricing-card .price-tier {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .pricing-card .price-amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .pricing-card .price-period {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--secondary);
+    margin-bottom: 16px;
+  }
+  .pricing-card .price-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .pricing-card .price-desc {
+    color: var(--secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  .pricing-card ul {
+    list-style: none;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 16px;
+  }
+  .pricing-card ul li {
+    padding: 6px 0 6px 20px;
+    position: relative;
+    color: var(--secondary);
+    font-size: 0.85rem;
+  }
+  .pricing-card ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ============== CHANNEL PREVIEW ============== */
+  .channel-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+  .channel-tile {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-md);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+  }
+  .channel-tile.highlight {
+    border-color: var(--accent);
+    background: linear-gradient(180deg, rgba(41, 151, 255, 0.08), rgba(255, 255, 255, 0.02));
+  }
+  .channel-tile .ch-name {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--secondary);
+    margin-bottom: 8px;
+  }
+  .channel-tile .ch-asset {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+  }
+  .channel-tile .ch-pair {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
+  .channel-tile .ch-tag {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: var(--border-radius-full);
+  }
+  .channel-tile.highlight .ch-tag {
+    background: rgba(41, 151, 255, 0.15);
+    color: var(--accent);
+  }
+  .channel-tile:not(.highlight) .ch-tag {
+    background: rgba(148, 148, 158, 0.1);
+    color: var(--secondary);
+  }
+
+  /* ============== SKOOL MOCK ============== */
+  .skool-mock {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    padding: 0;
+    overflow: hidden;
+  }
+  .skool-header {
+    padding: 24px 32px;
+    background: linear-gradient(90deg, rgba(74, 140, 255, 0.1), rgba(162, 89, 255, 0.1));
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .skool-header h4 { font-size: 1.1rem; }
+  .skool-body {
+    padding: 24px 32px;
+  }
+  .skool-module {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .skool-module:last-child { border-bottom: none; }
+  .skool-module .mod-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .skool-module .mod-num {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--secondary);
+    width: 28px;
+  }
+  .skool-module .mod-title { font-size: 0.95rem; }
+  .skool-module .mod-meta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--secondary);
+  }
+  .mod-progress {
+    width: 100px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-left: 16px;
+  }
+  .mod-progress-fill {
+    height: 100%;
+    background: var(--hero-gradient);
+  }
+
+  /* ============== VALUE STACK ============== */
+  .value-stack-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .value-stack-item:last-child { border-bottom: none; }
+  .value-stack-item .vs-num {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 0.85rem;
+    width: 28px;
+    flex-shrink: 0;
+  }
+  .value-stack-item .vs-content { flex: 1; }
+  .value-stack-item .vs-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+  .value-stack-item .vs-desc {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    line-height: 1.5;
+  }
+
+  /* ============== VISION BLOCK ============== */
+  .vision-quote {
+    font-size: 1.5rem;
+    line-height: 1.5;
+    color: var(--primary);
+    max-width: 900px;
+    padding: 32px 0;
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .vision-quote::before {
+    content: '"';
+    display: block;
+    font-size: 4rem;
+    line-height: 1;
+    background: var(--hero-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  /* ============== FOOTER ============== */
+  footer.deck-footer {
+    padding: 64px;
+    text-align: center;
+    border-top: 1px solid var(--glass-border);
+    color: var(--secondary);
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+  }
+
+  /* ============== RESPONSIVE ============== */
+  @media (max-width: 1024px) {
+    .grid-3, .grid-4, .grid-5, .channel-grid { grid-template-columns: 1fr 1fr; }
+    .hero-title { font-size: 3.5rem; }
+    .slide-title { font-size: 2.5rem; }
+  }
+  @media (max-width: 640px) {
+    section.slide { padding: 100px 24px 32px; }
+    .grid-2, .grid-3, .grid-4, .grid-5, .channel-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 2.5rem; }
+    .slide-title { font-size: 2rem; }
+    .deck-nav { padding: 12px 16px; }
+    .deck-nav .progress-bar { width: 100px; }
+    .framework-list li { grid-template-columns: 1fr; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== DECK NAV ============== -->
+<nav class="deck-nav">
+  <div class="brand">VERSTIGE OS × WALLSTREETWALE</div>
+  <div style="display:flex; align-items:center;">
+    <span class="progress" id="progressLabel">01 / 16</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+</nav>
+
+<!-- ============== SLIDE 01: HERO ============== -->
+<section class="slide slide-hero">
+  <div class="hero-badge"><span class="dot"></span> STRATEGY BRIEF · CONFIDENTIAL · JUN 24 2026</div>
+  <h1 class="hero-title">
+    <span class="gradient-text">Ascension</span> meets<br/>
+    <span class="gradient-text">Verstige OS</span>.<br/>
+    <span style="color: var(--secondary); font-weight: 400;">One OS. Two brands. Endless execution.</span>
+  </h1>
+  <p class="hero-sub">
+    The full operating-system merge between WallStreetWale's retail forex ecosystem
+    and the Verstige OS platform. From scanner to classroom, signal to funded account,
+    beginner to badge-holding elite.
+  </p>
+  <div class="hero-cta-row">
+    <button class="btn-primary">↓ Scroll the deck</button>
+    <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--secondary);">
+      16 slides · ~8 min read
+    </span>
+  </div>
+</section>
+
+<!-- ============== SLIDE 02: THE THESIS ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">01 · THE THESIS</div>
+  <h2 class="slide-title">Why merge <span class="gradient-text">at all</span>?</h2>
+  <p class="slide-subtitle">
+    Wale has a working forex community, a live scanner, course content, and 50+ members.
+    Verstige OS has the platform, the trading engine, the Telegram signal network, and
+    the technology stack. Neither is complete alone. Together they cover the full stack:
+    attract → educate → signal → execute → certify.
+  </p>
+  <div class="grid-3" style="margin-top: 32px;">
+    <div class="glass-card">
+      <div class="stat-label" style="margin-bottom: 12px;">WALE BRINGS</div>
+      <ul class="check-list">
+        <li><strong>50+ active community members</strong> with funded accounts</li>
+        <li><strong>Live 11-pair forex scanner</strong> running 24/7 on Railway</li>
+        <li><strong>Quarter-level methodology</strong> (proven, ranked, monetized)</li>
+        <li><strong>Course content</strong> — Blueprint, Bootcamp, Mentorship</li>
+        <li><strong>AI infrastructure & high-level tech stack knowledge</strong></li>
+        <li><strong>Industry respect & recognition</strong> — Dell 8-figure background</li>
+        <li><strong>Business & platform-building experience</strong></li>
+      </ul>
+    </div>
+    <div class="glass-card">
+      <div class="stat-label" style="margin-bottom: 12px;">VERSTIGE BRINGS</div>
+      <ul class="check-list">
+        <li><strong>Production OS platform</strong> with 4 live divisions</li>
+        <li><strong>Trading engine & Telegram signal network</strong></li>
+        <li><strong>Supabase infrastructure</strong> + admin lifecycle tracking</li>
+        <li><strong>Genesis FX broker partnership</strong> + IB commissions</li>
+        <li><strong>8 months of platform development</strong> — battle-tested</li>
+        <li><strong>Payment, email, marketing, content systems</strong> — pre-built</li>
+        <li><strong>Unified onboarding flow</strong> — handles multiple members at scale</li>
+      </ul>
+    </div>
+    <div class="glass-card">
+      <div class="stat-label" style="margin-bottom: 12px;">TOGETHER</div>
+      <ul class="check-list">
+        <li><strong>Full funnel</strong> from free scanner to funded elite</li>
+        <li><strong>Two revenue lines per user</strong> (indicator + scanner)</li>
+        <li><strong>Classroom + bootcamp system</strong> with progress tracking</li>
+        <li><strong>Joint branding under Verstige OS</strong> as primary</li>
+        <li><strong>30/30/40 commission split</strong> on Genesis FX IB</li>
+        <li><strong>First free-pathway trading OS</strong> in the industry</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 03: WALE'S DEEP VALUE ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">02 · WALE'S DEEP VALUE</div>
+  <h2 class="slide-title">What Wale actually <span class="gradient-text">brings</span>.</h2>
+  <p class="slide-subtitle">
+    Beyond the scanner and the methodology, Wale brings 10+ years of trading, an
+    8-figure corporate sales track record, a deep respect in the trading community,
+    and working knowledge of the AI and tech stack that powers modern platforms.
+  </p>
+  <div class="grid-2" style="margin-top: 32px;">
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 20px;">Trading mastery</h3>
+      <ul class="check-list">
+        <li><strong>10+ years of live trading</strong> — thousands of logged hours</li>
+        <li><strong>800+ students trained</strong> through Blueprint + Bootcamps</li>
+        <li><strong>Quarter-level methodology</strong> — institutional framework, retail-priced</li>
+        <li><strong>11 currency pairs</strong> mastered with the 5-stage lifecycle system</li>
+        <li><strong>Risk discipline</strong> — 2% formula, locked entry plans, no revenge trading</li>
+        <li><strong>Live market sessions</strong> — daily execution, real accountability</li>
+      </ul>
+    </div>
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 20px;">Business & technology depth</h3>
+      <ul class="check-list">
+        <li><strong>Ex-Dell enterprise account exec</strong> — closed 8-figure deals with Fortune 500s</li>
+        <li><strong>First-year quota beat by 144%</strong> — promoted to enterprise accounts</li>
+        <li><strong>Built his own platform end-to-end</strong> — scanner, payments, content, delivery</li>
+        <li><strong>AI infrastructure knowledge</strong> — understands the high-level tech stack</li>
+        <li><strong>Respect in the industry</strong> — referenced across trading circles</li>
+        <li><strong>Prior platform experience</strong> — knows what scales and what breaks</li>
+      </ul>
+    </div>
+  </div>
+  <div class="glass-panel" style="margin-top: 32px;">
+    <div class="slide-subheader" style="margin-top: 0;">Wale's current pricing for his systems</div>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>TIER</th>
+          <th>PRICE</th>
+          <th>WHAT IT IS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill pill-free">FREE</span></td>
+          <td style="font-family: var(--font-mono);">$0</td>
+          <td>Live scanner · 11 pairs · state + score + macro verdict</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-pro">PRO</span></td>
+          <td style="font-family: var(--font-mono);">$9.99/mo</td>
+          <td>Push alerts at 4/6 + full macro explanation + alert history</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-elite">ELITE</span></td>
+          <td style="font-family: var(--font-mono);">$49.99/mo</td>
+          <td>Full trade plan · entry / SL / TP1-3 · re-entry · auto lot size</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-pro">BLUEPRINT</span></td>
+          <td style="font-family: var(--font-mono);">$297 once</td>
+          <td>Forex Mastery course · lifetime access</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-pro">BOOTCAMP</span></td>
+          <td style="font-family: var(--font-mono);">$97</td>
+          <td>6-week small-group mentorship · limited cohort</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-elite">MENTORSHIP</span></td>
+          <td style="font-family: var(--font-mono);">$497</td>
+          <td>Private 1:1 coaching · application required</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============== SLIDE 04: THE FRAMEWORK ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">03 · THE FRAMEWORK</div>
+  <h2 class="slide-title">Wale's methodology, <span class="gradient-text">cleanly mapped</span>.</h2>
+  <p class="slide-subtitle">
+    Six core constructs. Each one has a clear definition, a clear purpose, and a
+    clear place in the scanner output. This is what we're pulling into Verstige OS.
+  </p>
+  <div class="glass-panel" style="margin-top: 32px;">
+    <ul class="framework-list">
+      <li>
+        <div class="fw-title">Quarter Levels</div>
+        <div class="fw-desc">Institutional price zones at the .00, .25, .50, .75 of every pair. Price is pulled to them, swept at them, and reversed from them — consistently, repeatedly, every session.</div>
+      </li>
+      <li>
+        <div class="fw-title">5-Stage Lifecycle</div>
+        <div class="fw-desc">Not In Play → Watch → Developing → Confirmed → Entry Ready. State, not signal. Each state tells you exactly what to do (or not do).</div>
+      </li>
+      <li>
+        <div class="fw-title">6-Condition Score</div>
+        <div class="fw-desc">0 to 6 institutional confirmations per setup. 4+/6 = High Probability. 6/6 = Institutional Grade (A+). Score appears as a grade badge on every card.</div>
+      </li>
+      <li>
+        <div class="fw-title">Macro Context</div>
+        <div class="fw-desc">DXY for USD pairs, synthetic Yen Basket for JPY crosses. One-word verdict: Aligned / Conflicting / Neutral. Drives whether the setup is real or noise.</div>
+      </li>
+      <li>
+        <div class="fw-title">Entry Latch</div>
+        <div class="fw-desc">Once a setup reaches Confirmed, the plan is frozen. Entry, SL, TP1/TP2/TP3 all locked. No second-guessing, no moving targets. The plan is the plan until the trade resolves.</div>
+      </li>
+      <li>
+        <div class="fw-title">2% Risk Formula</div>
+        <div class="fw-desc">Account × 2% = max risk per trade. Max risk ÷ (SL pips × pip value) = lot size. Every trade, no exceptions. The math that keeps you in the game.</div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 05: SUGGESTED PRICING DECK ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">04 · SUGGESTED PRICING DECK <span class="muted-text" style="text-transform: none; letter-spacing: 0; font-size: 0.7rem; margin-left: 8px;">· idea pricing · still brainstorming</span></div>
+  <h2 class="slide-title">Three OS layers. <span class="gradient-text">One unified stack.</span></h2>
+  <p class="slide-subtitle">
+    The combined ecosystem maps cleanly onto three product layers — Flow OS on top
+    for full automation, Algo OS in the middle for the algorithm-driven execution,
+    Zone OS at the foundation for the scanners and indicators. Zone OS is where
+    Wale's Ascension and Julylan's Volatility scanner live side-by-side. Users pick
+    the layer that matches their style. This is the idea deck, not the final.
+  </p>
+
+  <!-- ============== THREE LAYER STACK ============== -->
+  <div class="os-stack" style="margin-top: 32px;">
+
+    <!-- FLOW OS -->
+    <div class="os-layer os-layer-flow">
+      <div class="os-layer-head">
+        <div>
+          <div class="os-layer-eyebrow">LAYER 01 · TOP</div>
+          <div class="os-layer-name gradient-text">Flow OS</div>
+          <div class="os-layer-desc">Fully automated trade execution. The system runs the strategy end-to-end.</div>
+        </div>
+        <div class="os-layer-price">
+          <div class="price-amount" style="font-size: 2.5rem; margin-bottom: 4px;">$149</div>
+          <div class="price-period">/ month</div>
+          <span class="pill pill-elite" style="margin-top: 8px;">FULLY AUTOMATED</span>
+        </div>
+      </div>
+      <ul class="os-layer-feats">
+        <li>Automated entry / SL / TP management</li>
+        <li>Strategy engine from Algo OS, hands-off</li>
+        <li>Connected broker execution via Genesis FX</li>
+        <li>Real-time P&L dashboard</li>
+        <li>Risk caps per cycle, per day, per week</li>
+      </ul>
+    </div>
+
+    <!-- ALGO OS -->
+    <div class="os-layer os-layer-algo">
+      <div class="os-layer-head">
+        <div>
+          <div class="os-layer-eyebrow">LAYER 02 · MIDDLE</div>
+          <div class="os-layer-name gradient-text">Algo OS</div>
+          <div class="os-layer-desc">Algorithm-driven signal generation. The strategies, the math, the logic — without the automation layer.</div>
+        </div>
+        <div class="os-layer-price">
+          <div class="price-amount" style="font-size: 2.5rem; margin-bottom: 4px;">$299.99</div>
+          <div class="price-period">/ month</div>
+          <span class="pill pill-pro" style="margin-top: 8px;">ALGO-DRIVEN</span>
+        </div>
+      </div>
+      <ul class="os-layer-feats">
+        <li>Proprietary strategy library across indices + forex</li>
+        <li>Backtested, live-tracked, fully transparent stats</li>
+        <li>Signal-grade output, you execute manually</li>
+        <li>Strategy switcher — flip between systems live</li>
+        <li>Performance attribution per strategy</li>
+      </ul>
+    </div>
+
+    <!-- ZONE OS (CONTAINS THE SCANNERS) -->
+    <div class="os-layer os-layer-zone">
+      <div class="os-layer-head">
+        <div>
+          <div class="os-layer-eyebrow">LAYER 03 · FOUNDATION</div>
+          <div class="os-layer-name gradient-text">Zone OS</div>
+          <div class="os-layer-desc">The foundation. Scanners, indicators, structure. Where the Ascension + Volatility scanners live.</div>
+        </div>
+        <div class="os-layer-price">
+          <span class="pill pill-free" style="margin-top: 8px;">3 TIERS BELOW</span>
+        </div>
+      </div>
+
+      <!-- ZONE OS INNER TIER GRID -->
+      <div class="zone-inner" style="margin-top: 24px;">
+        <div class="zone-scanner-pick" style="margin-bottom: 24px; padding: 16px 20px; background: rgba(0,0,0,0.3); border-radius: var(--border-radius-sm); border-left: 3px solid var(--accent);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <div class="stat-label" style="margin-bottom: 4px;">PICK YOUR SCANNER</div>
+              <div style="font-size: 0.95rem; color: var(--primary);">User chooses one or both — built into the same tier pricing</div>
+            </div>
+            <div style="display: flex; gap: 12px;">
+              <span class="pill pill-pro">ASCENSION · WALE</span>
+              <span class="pill pill-elite">VOLATILITY · JULYLAN</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="pricing-card">
+            <div class="price-tier">ZONE TIER 1</div>
+            <div class="price-name">Scanner</div>
+            <div class="price-amount">$29</div>
+            <div class="price-period">/ month</div>
+            <p class="price-desc">One scanner. Pick Ascension or Volatility. Live states, push alerts, signal access.</p>
+            <ul>
+              <li>Live 11-pair OR indices engine</li>
+              <li>5-stage lifecycle + score</li>
+              <li>Macro context verdict</li>
+              <li>Push alerts at 4/6</li>
+              <li>OS Alerts · Ascension channel</li>
+            </ul>
+          </div>
+          <div class="pricing-card featured">
+            <div class="price-tier">ZONE TIER 2 · MOST POPULAR</div>
+            <div class="price-name">Scanner + Indicator</div>
+            <div class="price-amount">$99</div>
+            <div class="price-period">/ month</div>
+            <p class="price-desc">Scanner + the matching indicator. Both flavors available. The complete execution stack.</p>
+            <ul>
+              <li>Everything in Scanner</li>
+              <li>Verstige Pro indicator (Volatility)</li>
+              <li>Indices + forex signals</li>
+              <li>Trade journal + analytics</li>
+              <li>Priority support</li>
+            </ul>
+          </div>
+          <div class="pricing-card">
+            <div class="price-tier">ZONE TIER 3</div>
+            <div class="price-name">Elite Combined</div>
+            <div class="price-amount">$149</div>
+            <div class="price-period">/ month</div>
+            <p class="price-desc">Both scanners + both indicators. Locked trade plans, full TP management, full lifecycle.</p>
+            <ul>
+              <li>Ascension + Volatility</li>
+              <li>Exact entry / SL / TP1-3</li>
+              <li>Auto lot sizing</li>
+              <li>Re-entry signals</li>
+              <li>Discord Elite role + badge</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== À LA CARTE & MENTORSHIP ============== -->
+  <div class="grid-2" style="margin-top: 32px;">
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 16px;">À la carte & free entry</h3>
+      <p style="color: var(--secondary); margin-bottom: 16px; line-height: 1.6;">
+        Users don't have to buy anything to start. Free entry unlocks a limited slice
+        of the Telegram alerts, the public education library, and the core system
+        walkthroughs. Upgrade to a membership to unlock the <strong>live calls</strong>,
+        the <strong>private community</strong>, and the <strong>1:1 lessons</strong>.
+      </p>
+      <ul class="check-list">
+        <li><strong>Free tier</strong> — leverage a set number of Telegram alerts, access free education + system docs</li>
+        <li><strong>Membership</strong> — required for live calls, private community, and personal lessons</li>
+        <li><strong>Individual products</strong> — Blueprint, Bootcamp, indicator-only, scanner-only, signal-channel-only</li>
+        <li><strong>One-time purchases</strong> alongside subscriptions</li>
+        <li><strong>Upsell path</strong> — free → membership → Elite → Flow OS when they're ready</li>
+      </ul>
+    </div>
+    <div class="glass-panel" style="border-color: var(--accent); background: linear-gradient(180deg, rgba(41, 151, 255, 0.05), rgba(255, 255, 255, 0.02));">
+      <h3 style="margin-bottom: 16px;">Mentorship — one-time, choose your mentor</h3>
+      <p style="color: var(--secondary); margin-bottom: 16px; line-height: 1.6;">
+        A new product: 1:1 mentorship, one-time pricing. The buyer selects <strong>Julylan</strong>
+        or <strong>Wale</strong> at checkout. <strong style="color: var(--fintech-green);">That person receives 100% of the payment.</strong>
+        No split. No commission. No overhead. The mentor keeps the full bag.
+      </p>
+      <div class="grid-2" style="gap: 16px;">
+        <div style="padding: 16px; background: rgba(0,0,0,0.3); border-radius: var(--border-radius-sm);">
+          <div class="stat-label" style="margin-bottom: 8px;">WITH JULYLAN</div>
+          <div style="font-weight: 600;">$997</div>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--fintech-green);">100% → Julylan</div>
+        </div>
+        <div style="padding: 16px; background: rgba(0,0,0,0.3); border-radius: var(--border-radius-sm);">
+          <div class="stat-label" style="margin-bottom: 8px;">WITH WALE</div>
+          <div style="font-weight: 600;">$997</div>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--fintech-green);">100% → Wale</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 06: 11 STRATEGIES ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">05 · THE 11 STRATEGIES</div>
+  <h2 class="slide-title">One name per pair. <span class="gradient-text">One strategy per card.</span></h2>
+  <p class="slide-subtitle">
+    We're taking Wale's 11 forex pairs and giving each one a distinct branded
+    name. Each strategy becomes a standalone card in the Verstige OS signal network,
+    posted to the new <span class="accent-text">OS Alerts · Ascension</span> Telegram channel.
+  </p>
+  <div class="grid-4" style="margin-top: 32px;">
+    <div class="pair-card">
+      <div class="pair-symbol">EUR/USD</div>
+      <div class="pair-strategy">Euro Anchor</div>
+      <span class="pair-tag">CORE · DXY-DRIVEN</span>
+    </div>
+    <div class="pair-card">
+      <div class="pair-symbol">GBP/USD</div>
+      <div class="pair-strategy">Cable Strike</div>
+      <span class="pair-tag">VOLATILE · LONDON</span>
+    </div>
+    <div class="pair-card">
+      <div class="pair-symbol">USD/JPY</div>
+      <div class="pair-strategy">Yen Pressure</div>
+      <span class="pair-tag">BASKET-TRACKED</span>
+    </div>
+    <div class="pair-card">
+      <div class="pair-symbol">USD/CHF</div>
+      <div class="pair-strategy">Swiss Reverse</div>
+      <span class="pair-tag">DXY INVERSE</span>
+    </div>
+    <div class="pair-card">
+      <div class="pair-symbol">AUD/USD</div>
+      <div class="pair-strategy">Aussie Drift</div>
+      <span class="pair-tag">RISK-ON</span>
+    </div>
+    <div class="pair-card">
+      <div class="pair-symbol">NZD/USD</div>
+      <div class="pair-strategy">Kiwi Glide</div>
+      <span class="pair-tag">COMMODITY-LINKED</span>
+    </div>
+    <div class="pair-card">
+      <div class="pair-symbol">USD/CAD</div>
+      <div class="pair-strategy">Loonie Pulse</div>
+      <span class="pair-tag">OIL-CORRELATED</span>
+    </div>
+    <div class="pair-card">
+      <div class="pair-symbol">EUR/JPY</div>
+      <div class="pair-strategy">Euro-Yen Cross</div>
+      <span class="pair-tag">HIGH BETA</span>
+    </div>
+    <div class="pair-card">
+      <div class="pair-symbol">GBP/JPY</div>
+      <div class="pair-strategy">Dragon Cross</div>
+      <span class="pair-tag">ULTRA-VOLATILE</span>
+    </div>
+    <div class="pair-card">
+      <div class="pair-symbol">AUD/JPY</div>
+      <div class="pair-strategy">Risk Mirror</div>
+      <span class="pair-tag">RISK SENTIMENT</span>
+    </div>
+    <div class="pair-card">
+      <div class="pair-symbol">CAD/JPY</div>
+      <div class="pair-strategy">Loonie-Yen Wave</div>
+      <span class="pair-tag">CARRY PAIR</span>
+    </div>
+  </div>
+  <p style="margin-top: 32px; color: var(--secondary); font-size: 0.9rem; font-family: var(--font-mono);">
+    ↑ Each strategy card uses the same Telegram format the existing OS Alert Network already runs.
+  </p>
+</section>
+
+<!-- ============== SLIDE 07: OS ALERTS · ASCENSION ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">06 · THE NEW CHANNEL</div>
+  <h2 class="slide-title">OS Alerts · <span class="gradient-text">Ascension</span></h2>
+  <p class="slide-subtitle">
+    A new dedicated Telegram channel for the scanner output, formatted identically
+    to the existing OS Alert channels. Wale's confirmation score appended at the
+    bottom of every signal so the forex context sits alongside the indices context.
+  </p>
+  <div class="grid-2" style="margin-top: 32px;">
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 20px;">Channel structure</h3>
+      <ul class="check-list">
+        <li><strong>Channel name:</strong> OS Alerts · Ascension</li>
+        <li><strong>Format:</strong> Same as existing OS Alert channels (entry, SL, TP1/TP2/TP3)</li>
+        <li><strong>Frequency:</strong> Real-time, every 15 minutes when state changes</li>
+        <li><strong>Branding:</strong> Verstige OS only</li>
+        <li><strong>Access:</strong> Free to all OS members · Pro/Elite get full plan</li>
+        <li><strong>Logic source:</strong> Wale's existing Python script (Railway → GitHub)</li>
+        <li><strong>Enhancement:</strong> Confirmation score appended at bottom of every signal</li>
+      </ul>
+    </div>
+    <div class="signal-card">
+      <div class="signal-head">
+        <div>
+          <div class="signal-pair">GBP/USD · CABLE STRIKE</div>
+          <div style="font-size: 0.8rem; color: var(--secondary); margin-top: 4px;">OS ALERTS · ASCENSION</div>
+        </div>
+        <div class="signal-dir" style="background: rgba(255, 69, 58, 0.15); color: var(--fintech-red);">▼ SELL</div>
+      </div>
+      <div class="signal-row">
+        <span class="signal-label">ENTRY</span>
+        <span class="signal-value">1.2562</span>
+      </div>
+      <div class="signal-row">
+        <span class="signal-label">STOP LOSS</span>
+        <span class="signal-value" style="color: var(--fintech-red);">1.2587 (25 pips)</span>
+      </div>
+      <div class="signal-row">
+        <span class="signal-label">TP1</span>
+        <span class="signal-value" style="color: var(--fintech-green);">1.2532 · 1.3R ✓</span>
+      </div>
+      <div class="signal-row">
+        <span class="signal-label">TP2</span>
+        <span class="signal-value">1.2487 · 3.0R ←</span>
+      </div>
+      <div class="signal-row">
+        <span class="signal-label">TP3</span>
+        <span class="signal-value">1.2450 · 4.5R</span>
+      </div>
+      <div class="signal-foot">
+        <span>VERSTIGE OS</span>
+        <span class="score-pill">SCANNER SCORE: 5/6</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 08: BACKEND INTEGRATION ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">07 · BACKEND INTEGRATION</div>
+  <h2 class="slide-title">Pull, parse, post. <span class="gradient-text">No rebuild.</span></h2>
+  <p class="slide-subtitle">
+    Wale's scanner is already running in production on Railway. We don't rewrite it —
+    we mirror it, parse it, and pipe it into the existing Verstige OS signal bridge.
+    Same engine, same Python, same repo — just a new destination channel and admin
+    visibility.
+  </p>
+  <div class="funnel" style="margin-top: 32px;">
+    <div class="funnel-step">
+      <span class="step-num">01</span>
+      <span class="step-label"><strong>Pull</strong> — Clone Wale's GitHub repo to /verstige-os/scanner/ascension/</span>
+      <span class="step-meta">RAILWAY REPO</span>
+    </div>
+    <div class="funnel-step">
+      <span class="step-num">02</span>
+      <span class="step-label"><strong>Audit</strong> — Map Wale's 6-condition logic to the Verstige signal schema</span>
+      <span class="step-meta">PYTHON ↔ PARSER</span>
+    </div>
+    <div class="funnel-step">
+      <span class="step-num">03</span>
+      <span class="step-label"><strong>Bridge</strong> — Reuse the existing verstige-signal-bridge parser (parser.py + bridge.py)</span>
+      <span class="step-meta">EXISTING CODE</span>
+    </div>
+    <div class="funnel-step">
+      <span class="step-num">04</span>
+      <span class="step-label"><strong>Post</strong> — Pipe alerts to new OS Alerts · Ascension channel via Telegram bot</span>
+      <span class="step-meta">TELEGRAM API</span>
+    </div>
+    <div class="funnel-step">
+      <span class="step-num">05</span>
+      <span class="step-label"><strong>Store</strong> — Persist every alert to Supabase for the visual dashboard layer</span>
+      <span class="step-meta">SUPABASE</span>
+    </div>
+    <div class="funnel-step">
+      <span class="step-num">06</span>
+      <span class="step-label"><strong>Upgrade</strong> — Add admin tracking, user engagement, and badge progression</span>
+      <span class="step-meta">OS BACKEND</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 09: VISUAL DASHBOARD (4x) ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">08 · THE TRADING PAGE</div>
+  <h2 class="slide-title">Four channels. <span class="gradient-text">One unified surface.</span></h2>
+  <p class="slide-subtitle">
+    The OS Trading page becomes a real-time visual experience: every live signal
+    from every active channel renders as a card, with state, score, distance to
+    quarter level, and TP progress all on screen at once. Adding the Ascension
+    channel multiplies the signal density by 4x — the page becomes a genuine
+    trading dashboard, not a feed.
+  </p>
+
+  <div class="slide-subheader" style="margin-top: 0;">Channel lineup — what shows up on the OS Trading page</div>
+  <div class="channel-grid" style="margin-top: 16px;">
+    <div class="channel-tile">
+      <div class="ch-name">CHANNEL 01</div>
+      <div class="ch-asset">Indices Alpha</div>
+      <div class="ch-pair">NAS · SPX · DOW</div>
+      <span class="ch-tag">EXISTING</span>
+    </div>
+    <div class="channel-tile">
+      <div class="ch-name">CHANNEL 02</div>
+      <div class="ch-asset">Indices Swing</div>
+      <div class="ch-pair">NAS · SPX · DOW</div>
+      <span class="ch-tag">EXISTING</span>
+    </div>
+    <div class="channel-tile">
+      <div class="ch-name">CHANNEL 03</div>
+      <div class="ch-asset">Indices Scalp</div>
+      <div class="ch-pair">NAS · SPX · DOW</div>
+      <span class="ch-tag">EXISTING</span>
+    </div>
+    <div class="channel-tile">
+      <div class="ch-name">CHANNEL 04</div>
+      <div class="ch-asset">Indices News</div>
+      <div class="ch-pair">NAS · SPX · DOW</div>
+      <span class="ch-tag">EXISTING</span>
+    </div>
+    <div class="channel-tile highlight">
+      <div class="ch-name">CHANNEL 05</div>
+      <div class="ch-asset">Ascension</div>
+      <div class="ch-pair">11 FOREX PAIRS</div>
+      <span class="ch-tag">+ NEW · WALE</span>
+    </div>
+  </div>
+
+  <div class="glass-panel" style="margin-top: 32px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3>Sample: GBP/USD · Cable Strike</h3>
+      <span class="pill pill-pro">TRADE RUNNING</span>
+    </div>
+    <div class="grid-4" style="gap: 16px;">
+      <div class="stat-block">
+        <div class="stat-value-sm">1.2562</div>
+        <div class="stat-label">ENTRY</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-value-sm green-text">1.2532</div>
+        <div class="stat-label">TP1 · 1.3R ✓ HIT</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-value-sm">1.2487</div>
+        <div class="stat-label">TP2 · 3.0R ← NEXT</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-value-sm" style="color: var(--secondary);">1.2450</div>
+        <div class="stat-label">TP3 · 4.5R</div>
+      </div>
+    </div>
+    <div style="margin-top: 24px; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+      <div style="width: 35%; height: 100%; background: var(--hero-gradient);"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 10: SKOOL-STYLE CLASSROOM ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">09 · THE CLASSROOM</div>
+  <h2 class="slide-title">Skool-inspired, <span class="gradient-text">OS-native</span>.</h2>
+  <p class="slide-subtitle">
+    A dedicated get-started experience inside Verstige OS — workbooks, modules,
+    boot camps, and progress tracking. Every new user gets a dashboard. Every
+    cohort is automated. Every step is recorded.
+  </p>
+
+  <div class="grid-2" style="margin-top: 32px; gap: 32px;">
+    <div class="skool-mock">
+      <div class="skool-header">
+        <div>
+          <h4>Ascension · Foundation Track</h4>
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--secondary); margin-top: 4px;">COHORT 01 · JULY 2026</div>
+        </div>
+        <span class="pill pill-pro">38 / 50 SEATS</span>
+      </div>
+      <div class="skool-body">
+        <div class="skool-module">
+          <div class="mod-left">
+            <div class="mod-num">01</div>
+            <div>
+              <div class="mod-title">Market Structure Basics</div>
+              <div class="mod-meta">4 lessons · 45 min · workbook</div>
+            </div>
+          </div>
+          <div class="mod-progress"><div class="mod-progress-fill" style="width: 100%;"></div></div>
+        </div>
+        <div class="skool-module">
+          <div class="mod-left">
+            <div class="mod-num">02</div>
+            <div>
+              <div class="mod-title">Quarter Levels Deep Dive</div>
+              <div class="mod-meta">6 lessons · 1h 20min · live session</div>
+            </div>
+          </div>
+          <div class="mod-progress"><div class="mod-progress-fill" style="width: 80%;"></div></div>
+        </div>
+        <div class="skool-module">
+          <div class="mod-left">
+            <div class="mod-num">03</div>
+            <div>
+              <div class="mod-title">5-Stage Lifecycle in Practice</div>
+              <div class="mod-meta">5 lessons · 1h · demo trades</div>
+            </div>
+          </div>
+          <div class="mod-progress"><div class="mod-progress-fill" style="width: 45%;"></div></div>
+        </div>
+        <div class="skool-module">
+          <div class="mod-left">
+            <div class="mod-num">04</div>
+            <div>
+              <div class="mod-title">Risk & Psychology</div>
+              <div class="mod-meta">4 lessons · 50 min · reflection journal</div>
+            </div>
+          </div>
+          <div class="mod-progress"><div class="mod-progress-fill" style="width: 15%;"></div></div>
+        </div>
+        <div class="skool-module">
+          <div class="mod-left">
+            <div class="mod-num">05</div>
+            <div>
+              <div class="mod-title">Funded Account Activation</div>
+              <div class="mod-meta">2 lessons · 30 min · Genesis FX walkthrough</div>
+            </div>
+          </div>
+          <div class="mod-progress"><div class="mod-progress-fill" style="width: 0%;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="glass-panel" style="margin-bottom: 24px;">
+        <h3 style="margin-bottom: 16px;">User journey</h3>
+        <ul class="check-list">
+          <li><strong>Sign up</strong> → Free scanner access granted instantly</li>
+          <li><strong>Foundation workbook</strong> → Market structure, risk, psychology</li>
+          <li><strong>Methodology module</strong> → Quarter levels, macro, lifecycle</li>
+          <li><strong>Demo account</strong> → 30 days paper trading with scanner</li>
+          <li><strong>Live bootcamp enrollment</strong> → Coached 6-week cohort</li>
+          <li><strong>Funded Genesis FX</strong> → Real capital · IB commissions active</li>
+          <li><strong>Badge & rank progression</strong> → Visible status in Discord</li>
+        </ul>
+      </div>
+      <div class="glass-panel">
+        <h3 style="margin-bottom: 16px;">Admin tracking</h3>
+        <ul class="check-list">
+          <li><strong>Per-user lifecycle</strong> — Where they are in the funnel</li>
+          <li><strong>Workbook completion</strong> — Module-by-module progress</li>
+          <li><strong>Bootcamp attendance</strong> — Cohort roster, sessions, homework</li>
+          <li><strong>Scanner engagement</strong> — Daily active, alerts acted on</li>
+          <li><strong>Funded status</strong> — Genesis FX account state, lot volume</li>
+          <li><strong>Tier upgrades</strong> — Free → Pro → Elite → Bundles</li>
+          <li><strong>Discord presence</strong> — Posts, sessions attended, badges earned</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 11: BOOTCAMPS ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">10 · BOOTCAMPS</div>
+  <h2 class="slide-title">Recurring cohorts. <span class="gradient-text">Compounding community.</span></h2>
+  <p class="slide-subtitle">
+    Boot camps run every 2–3 months as a deliberate incentive to bring new users
+    deeper into the platform. Each cohort is automated, tracked, and converted.
+    The cadence creates urgency; the structure creates trust.
+  </p>
+  <div class="grid-4" style="margin-top: 32px;">
+    <div class="glass-card">
+      <div class="stat-label" style="margin-bottom: 12px;">COHORT 01</div>
+      <div class="stat-value-sm">JUL 2026</div>
+      <p style="color: var(--secondary); font-size: 0.9rem; margin-top: 8px;">First Ascension cohort · 30 seats · Wale-led opening session</p>
+      <span class="pill pill-amber" style="margin-top: 12px;">LAUNCH COHORT</span>
+    </div>
+    <div class="glass-card">
+      <div class="stat-label" style="margin-bottom: 12px;">COHORT 02</div>
+      <div class="stat-value-sm">SEP 2026</div>
+      <p style="color: var(--secondary); font-size: 0.9rem; margin-top: 8px;">Q3 bootcamp · 50 seats · live trading + methodology refresh</p>
+      <span class="pill pill-pro" style="margin-top: 12px;">PLANNED</span>
+    </div>
+    <div class="glass-card">
+      <div class="stat-label" style="margin-bottom: 12px;">COHORT 03</div>
+      <div class="stat-value-sm">NOV 2026</div>
+      <p style="color: var(--secondary); font-size: 0.9rem; margin-top: 8px;">Q4 advanced cohort · focus on indices + forex combined</p>
+      <span class="pill pill-pro" style="margin-top: 12px;">PLANNED</span>
+    </div>
+    <div class="glass-card">
+      <div class="stat-label" style="margin-bottom: 12px;">COHORT 04+</div>
+      <div class="stat-value-sm">2027</div>
+      <p style="color: var(--secondary); font-size: 0.9rem; margin-top: 8px;">Quarterly cadence · scaling to 100+ seats · instructor pool expands</p>
+      <span class="pill pill-pro" style="margin-top: 12px;">RECURRING</span>
+    </div>
+  </div>
+  <div class="glass-panel" style="margin-top: 32px;">
+    <h3 style="margin-bottom: 16px;">Incentive structure</h3>
+    <div class="grid-3" style="gap: 24px;">
+      <div>
+        <div class="stat-label" style="margin-bottom: 8px;">FOR USERS</div>
+        <p style="color: var(--secondary); font-size: 0.95rem;">Free entry with funded Genesis account · structured curriculum · badge on completion · direct access to Wale</p>
+      </div>
+      <div>
+        <div class="stat-label" style="margin-bottom: 8px;">FOR VERSTIGE</div>
+        <p style="color: var(--secondary); font-size: 0.95rem;">Pipeline of paying customers · IB commission activation · community lock-in · word-of-mouth growth</p>
+      </div>
+      <div>
+        <div class="stat-label" style="margin-bottom: 8px;">FOR WALE</div>
+        <p style="color: var(--secondary); font-size: 0.95rem;">50 → 500+ member ecosystem · productized teaching · compound content value · partnership equity via results</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 12: COMMUNITY + DISCORD ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">11 · COMMUNITY INFRASTRUCTURE</div>
+  <h2 class="slide-title">Discord, restructured. <span class="gradient-text">Minimal. Aligned. Live.</span></h2>
+  <p class="slide-subtitle">
+    The entire community moves to Discord — minimalistic but rebuilt to align
+    with the funnel. Every channel maps to a stage in the user journey.
+    Every member has a rank, a badge, and a place. Growth fueled by partner
+    acquisition and a multi-platform content engine.
+  </p>
+
+  <!-- ============== ACQUISITION & DISTRIBUTION ============== -->
+  <div class="grid-2" style="margin-top: 24px;">
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 16px;">Whop — community acquisition</h3>
+      <p style="color: var(--secondary); margin-bottom: 16px; line-height: 1.6;">
+        <strong style="color: var(--primary);">Whop</strong> is the platform we leverage to bring
+        new users into our Discord community. Wale's existing audience + the combined
+        distribution footprint we build across social = a steady flow of new members
+        who already trust the methodology, all routed through Whop into Discord.
+      </p>
+      <ul class="check-list">
+        <li><strong>Whop storefront</strong> — single landing page for scanners, courses, memberships</li>
+        <li><strong>Whop → Discord handoff</strong> — purchased access auto-grants Discord role</li>
+        <li><strong>Cross-company funnels</strong> — two partner companies feeding the OS</li>
+        <li><strong>Community-to-channel handoff</strong> — Discord becomes the home base</li>
+      </ul>
+    </div>
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 16px;">Multi-platform distribution</h3>
+      <p style="color: var(--secondary); margin-bottom: 16px; line-height: 1.6;">
+        <strong style="color: var(--primary);">Leveraging TikTok, YouTube, X, Kick, Instagram, and Whop</strong>
+        to grow company exposure at scale. Each platform feeds the same funnel —
+        awareness → Whop landing → free scanner → funded member.
+      </p>
+      <div class="platform-grid">
+        <div class="platform-tile">
+          <div class="platform-name">TikTok</div>
+          <div class="platform-role">Short-form clips · scanner reveals · TP wins</div>
+        </div>
+        <div class="platform-tile">
+          <div class="platform-name">YouTube</div>
+          <div class="platform-role">Long-form · methodology · live trading replay</div>
+        </div>
+        <div class="platform-tile">
+          <div class="platform-name">X / Twitter</div>
+          <div class="platform-role">Real-time calls · market commentary · threads</div>
+        </div>
+        <div class="platform-tile">
+          <div class="platform-name">Kick</div>
+          <div class="platform-role">Live trading streams · community co-streams</div>
+        </div>
+        <div class="platform-tile">
+          <div class="platform-name">Instagram</div>
+          <div class="platform-role">Reels · lifestyle · visual proof · story CTAs to Whop</div>
+        </div>
+        <div class="platform-tile">
+          <div class="platform-name">Whop</div>
+          <div class="platform-role">Storefront · checkout · Discord role grant · member hub</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== CHANNELS + RANK/BADGE ============== -->
+  <div class="grid-2" style="margin-top: 24px;">
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 20px;">Channel architecture</h3>
+      <ul class="check-list">
+        <li><strong>#welcome</strong> — Onboarding, rules, role assignment</li>
+        <li><strong>#announcements</strong> — Wale + Julylan voice, drop notifications</li>
+        <li><strong>#scanner-live</strong> — Live pair states from the Ascension engine</li>
+        <li><strong>#trade-entries</strong> — Members posting live entries with #strategy tags</li>
+        <li><strong>#classroom</strong> — Bootcamp cohorts, workbook modules, homework</li>
+        <li><strong>#open-life</strong> — Live trading calls, market walkthroughs</li>
+        <li><strong>#wins</strong> — Public TP hits, funded milestones, badge unlocks</li>
+        <li><strong>#help-desk</strong> — Tiered support, admin escalation</li>
+      </ul>
+    </div>
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 20px;">Rank & badge system</h3>
+      <p style="color: var(--secondary); margin-bottom: 16px; line-height: 1.5;">
+        Two parallel systems. <strong style="color: var(--primary);">Gamification for free users</strong>
+        keeps the funnel sticky. <strong style="color: var(--primary);">Partner ranks</strong>
+        grow with the company. Both track where someone stands in the onboarding
+        process and how close they are to becoming a full Verstige member.
+      </p>
+
+      <div class="slide-subheader" style="margin-top: 0; font-size: 0.7rem;">FREE USER GAMIFICATION</div>
+      <div class="badge-row" style="margin-bottom: 8px;">
+        <div class="badge badge-bronze"><span class="badge-dot"></span> ROOKIE · SIGNED UP</div>
+      </div>
+      <div class="badge-row" style="margin-bottom: 8px;">
+        <div class="badge badge-silver"><span class="badge-dot"></span> EXPLORER · 7-DAY ACTIVE</div>
+      </div>
+      <div class="badge-row" style="margin-bottom: 8px;">
+        <div class="badge badge-gold"><span class="badge-dot"></span> STUDENT · WORKBOOK IN PROGRESS</div>
+      </div>
+      <div class="badge-row" style="margin-bottom: 24px;">
+        <div class="badge badge-platinum"><span class="badge-dot"></span> READY · FUNDED GENESIS</div>
+      </div>
+
+      <div class="slide-subheader" style="margin-top: 0; font-size: 0.7rem;">PARTNER RANK · GROWS WITH COMPANY</div>
+      <div class="badge-row" style="margin-bottom: 8px;">
+        <div class="badge badge-bronze"><span class="badge-dot"></span> PARTNER · BRONZE</div>
+      </div>
+      <div class="badge-row" style="margin-bottom: 8px;">
+        <div class="badge badge-silver"><span class="badge-dot"></span> PARTNER · SILVER</div>
+      </div>
+      <div class="badge-row" style="margin-bottom: 8px;">
+        <div class="badge badge-gold"><span class="badge-dot"></span> PARTNER · GOLD</div>
+      </div>
+      <div class="badge-row">
+        <div class="badge badge-platinum"><span class="badge-dot"></span> PARTNER · PLATINUM</div>
+      </div>
+
+      <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--glass-border);">
+        <p style="color: var(--secondary); font-size: 0.85rem; font-family: var(--font-mono); line-height: 1.5;">
+          + Achievement badges: First TP1 · 10 Trades Logged · Consistent Week · Genesis Funded · 100% Workbook · Recruited a Member
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 13: GENESIS FX IB ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">12 · THE REVENUE ENGINE</div>
+  <h2 class="slide-title">Genesis FX. <span class="gradient-text">30 / 30 / 40.</span></h2>
+  <p class="slide-subtitle">
+    The partnership agreement: a shared Genesis FX company account, $20/lot rebate
+    on every trade. Net split — Julylan 30%, Wale 30%, Company 40%. The company
+    share funds growth, marketing, and reinvestment. Recurring, passive, scales
+    with volume.
+  </p>
+  <div class="grid-4" style="margin-top: 32px;">
+    <div class="stat-block">
+      <div class="stat-value">$20</div>
+      <div class="stat-label">PER LOT REBATE</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-value">50</div>
+      <div class="stat-label">SEED MEMBERS</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-value">250</div>
+      <div class="stat-label">LOTS / MONTH PROJECTED</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-value">$5K</div>
+      <div class="stat-label">GROSS MONTHLY @ SEED</div>
+    </div>
+  </div>
+  <div class="glass-panel" style="margin-top: 32px;">
+    <h3 style="margin-bottom: 20px;">Distribution model</h3>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>TIER</th>
+          <th>SHARE</th>
+          <th>SEED MONTHLY (50 MEMBERS)</th>
+          <th>SCALE MONTHLY (500 MEMBERS)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Julylan</strong></td>
+          <td><span class="pill pill-pro">30%</span></td>
+          <td style="font-family: var(--font-mono);">$1,500</td>
+          <td style="font-family: var(--font-mono);">$15,000</td>
+        </tr>
+        <tr>
+          <td><strong>Wale</strong></td>
+          <td><span class="pill pill-pro">30%</span></td>
+          <td style="font-family: var(--font-mono);">$1,500</td>
+          <td style="font-family: var(--font-mono);">$15,000</td>
+        </tr>
+        <tr>
+          <td><strong>Company (growth fund)</strong></td>
+          <td><span class="pill pill-elite">40%</span></td>
+          <td style="font-family: var(--font-mono);">$2,000</td>
+          <td style="font-family: var(--font-mono);">$20,000</td>
+        </tr>
+        <tr>
+          <td><strong>TOTAL</strong></td>
+          <td><span class="pill pill-green">100%</span></td>
+          <td style="font-family: var(--font-mono); color: var(--fintech-green);">$5,000</td>
+          <td style="font-family: var(--font-mono); color: var(--fintech-green);">$50,000</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 16px; color: var(--secondary); font-size: 0.9rem; font-family: var(--font-mono);">
+      * The 40% company share is reinvested in marketing, content production, platform development, and the bootcamp incentive pool.
+    </p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 14: ALIGNMENT & VISION ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">13 · ALIGNMENT & VISION</div>
+  <h2 class="slide-title">Why <span class="gradient-text">we</span> align.</h2>
+  <p class="slide-subtitle">
+    This isn't just a business deal. Wale and Julylan carry the same spiritual values,
+    the same read on what the industry is missing, and the same vision for what
+    trading education should look like.
+  </p>
+
+  <div class="vision-quote">
+    The trading industry is missing authenticity. Most platforms charge thousands,
+    promise the world, and leave their users with broken tools and broken confidence.
+    We're building the first company to offer a <span class="gradient-text">free pathway</span>
+    into elite systems — paid for on the back end by the broker, not by the trader.
+  </div>
+
+  <div class="grid-2" style="margin-top: 48px;">
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 16px;">Shared values</h3>
+      <ul class="check-list">
+        <li><strong>Faith-first foundation</strong> — Wale's 4 pillars, Julylan's Verstige ethos</li>
+        <li><strong>Transparency over hype</strong> — real numbers, real wins, real losses</li>
+        <li><strong>Discipline over dopamine</strong> — structure beats excitement every time</li>
+        <li><strong>Authenticity as the moat</strong> — no fake testimonials, no manufactured urgency</li>
+        <li><strong>Legacy over lifestyle</strong> — building systems that outlast us</li>
+      </ul>
+    </div>
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 16px;">The free-pathway vision</h3>
+      <ul class="check-list">
+        <li><strong>Latest tech stack</strong> — AI infrastructure, modern OS, real-time signals</li>
+        <li><strong>Premium execution</strong> — institutional-grade tools, retail-accessible</li>
+        <li><strong>Zero barrier to entry</strong> — the scanner, the classroom, the community are all free</li>
+        <li><strong>Paid on the back end</strong> — Genesis FX rebates, not user subscriptions for the core</li>
+        <li><strong>First in the industry</strong> — no one else is structuring it this way</li>
+        <li><strong>Proof that the model works</strong> — 50 seed members, then 500, then 5,000</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 15: ROLLOUT TIMELINE ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">14 · ROLLOUT</div>
+  <h2 class="slide-title">Two weeks to build. <span class="gradient-text">Six months to scale.</span></h2>
+  <p class="slide-subtitle">
+    Honest projection: building this entire experience inside Verstige OS takes
+    a minimum of two weeks of focused work. Below is the realistic weekly breakdown,
+    the projected cadence, and the milestones we'll measure against.
+  </p>
+
+  <div class="grid-2" style="margin-top: 32px; gap: 32px;">
+    <div>
+      <div class="slide-subheader" style="margin-top: 0;">Build phase — inside Verstige OS</div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-week">WEEK 1 · PULL & AUDIT</div>
+          <div class="timeline-content">Clone Wale's GitHub repo. Audit Python logic. Map 6-condition output to Verstige signal schema. Confirm repo access. Identify any blockers.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-week">WEEK 2 · BRIDGE & PARSE</div>
+          <div class="timeline-content">Extend verstige-signal-bridge to read Wale's output. Create the new OS Alerts · Ascension channel. First test posts. Confirmation score formatting.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-week">WEEK 3 · DASHBOARD & CARDS</div>
+          <div class="timeline-content">Visual dashboard layer for the OS Trading page. TP progress tracking. Live cards for all 11 pairs. Channel grid showing 4 + 1 = 5 channels.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-week">WEEK 4 · CLASSROOM & ADMIN</div>
+          <div class="timeline-content">Workbook modules. Admin tracking. Cohort management. Skool-style get-started flow. First cohort enrollment opens.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="slide-subheader" style="margin-top: 0;">Scale phase — months 2-6</div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-week">MONTH 2 · SEED ONBOARDING</div>
+          <div class="timeline-content"><strong>Whop storefront goes live.</strong> 50 members migrated from Wale's existing community. Genesis FX accounts verified and funded. First IB rebate cycle closes. Discord restructured around the new channel map. First live open-life call broadcast across all 5 OS Alert channels simultaneously. Whop checkout flow active — new members route through Whop and auto-grant their Discord role.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-week">MONTH 3 · FIRST CONVERSIONS</div>
+          <div class="timeline-content"><strong>Distribution engine spins up.</strong> TikTok + YouTube + X + Kick + Instagram + Whop content cadence established — daily short-form, weekly long-form, real-time X calls, weekly Kick livestream, daily Instagram Reels + story funnels into Whop. First $1,000 IB commission month. First 10 paying conversions (Pro or Elite). Free-user gamification badges live in Discord — Rookie → Explorer → Student → Ready. Partner rank tracking enabled for early adopters.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-week">MONTH 4 · BUNDLE LAUNCH</div>
+          <div class="timeline-content"><strong>Multi-OS pricing goes live.</strong> Flow OS + Algo OS at $149/mo each, Zone OS tiers at $29/$99/$149, à la carte + mentor-pick mentorship all active. 200+ free scanner signups total. Cohort 02 bootcamp enrollment opens. First Blueprint sale attributed to scanner funnel. First partner-company member lands in Discord with a Platinum tier sign-up.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-week">MONTH 5–6 · VALIDATION</div>
+          <div class="timeline-content"><strong>The flywheel compounds.</strong> 25+ paying customers across all tiers. $1,500–$3,700 MRR baseline. 500+ total free users in the funnel. First bootcamp graduation with full cohort completion. TikTok hits first viral clip (10K+ views). YouTube channel monetized. Instagram Reels driving consistent top-of-funnel traffic into Whop. Q3 roadmap locked: add indices-specific scanner module, expand to a third partner company, open applications for the first Platinum-tier partner promotions.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-panel" style="margin-top: 32px; text-align: center; background: linear-gradient(135deg, rgba(74, 140, 255, 0.05), rgba(162, 89, 255, 0.05));">
+    <p style="color: var(--secondary); max-width: 800px; margin: 0 auto; font-size: 0.95rem; line-height: 1.6;">
+      <strong style="color: var(--primary);">Realistic projections, not hockey sticks.</strong>
+      Months 1-2 are pure build — no revenue. Month 3 sees the first IB commissions
+      and the first conversions. Real MRR baseline hits by month 6. Anything faster
+      is a bonus; anything slower is a signal to adjust the funnel. The content
+      engine + Whop storefront are the compounding multipliers that make the
+      back half of this projection defensible.
+    </p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 16: BRANDING + NEXT MOVES ============== -->
+<section class="slide">
+  <div class="slide-eyebrow">15 · BRANDING & NEXT MOVES</div>
+  <h2 class="slide-title">One brand. <span class="gradient-text">Two pillars.</span></h2>
+  <p class="slide-subtitle">
+    Verstige OS is the house. WallStreetWale is the headline feature. The joint
+    branding is real but the hierarchy is clear — and the Verstige backend
+    already does the heavy lifting.
+  </p>
+
+  <div class="grid-2" style="margin-top: 32px;">
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 16px;">What stays Wale-branded</h3>
+      <ul class="check-list">
+        <li><strong>Scanner UI inside the OS</strong> — "WallStreetWale Scanner" label</li>
+        <li><strong>Course content</strong> — Blueprint, Bootcamp, Mentorship retain Wale branding</li>
+        <li><strong>OS Alerts · Ascension channel</strong> — Wale's methodology, his voice</li>
+        <li><strong>Social proof & testimonials</strong> — His name, his story, his Dell history</li>
+        <li><strong>Methodology attribution</strong> — "Quarter Levels" always credit Wale</li>
+      </ul>
+    </div>
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 16px;">What lives under Verstige (already built)</h3>
+      <ul class="check-list">
+        <li><strong>Payment systems</strong> — Stripe, billing flows, subscriptions, one-time</li>
+        <li><strong>Email automation</strong> — onboarding drips, win-back, milestone triggers</li>
+        <li><strong>Marketing infrastructure</strong> — landing pages, lead capture, attribution</li>
+        <li><strong>Social media automation</strong> — scheduled posts, cross-platform</li>
+        <li><strong>Content systems</strong> — blog, video embeds, resource library</li>
+        <li><strong>Backend admin</strong> — pre-configured to handle multiple members</li>
+        <li><strong>Unified onboarding flow</strong> — single path from signup to funded</li>
+        <li><strong>8 months of platform development</strong> — battle-tested, already running</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="glass-panel" style="margin-top: 32px; text-align: center;">
+    <p style="color: var(--secondary); font-size: 1.1rem; line-height: 1.6; max-width: 700px; margin: 0 auto 24px;">
+      "Verstige OS is the operating system. WallStreetWale is one of its most powerful
+      native applications. The user doesn't leave the OS to use the scanner — the
+      scanner is part of the OS."
+    </p>
+  </div>
+
+  <div class="grid-3" style="margin-top: 32px;">
+    <div class="glass-card">
+      <div class="stat-label" style="margin-bottom: 12px;">DECISION 01</div>
+      <h3 style="margin-bottom: 12px;">Write the agreement.</h3>
+      <p style="color: var(--secondary); font-size: 0.95rem; line-height: 1.5;">
+        30/30/40 split, joint branding terms, asset ownership, exit clauses. Dated and
+        signed by both parties. No more verbal.
+      </p>
+      <span class="pill pill-amber" style="margin-top: 16px;">BLOCKING</span>
+    </div>
+    <div class="glass-card">
+      <div class="stat-label" style="margin-bottom: 12px;">DECISION 02</div>
+      <h3 style="margin-bottom: 12px;">Open the repo.</h3>
+      <p style="color: var(--secondary); font-size: 0.95rem; line-height: 1.5;">
+        Get access to Wale's Railway-deployed GitHub repo. Audit the Python. Map the
+        6-condition logic. Confirm we can extend the engine without rewriting.
+      </p>
+      <span class="pill pill-amber" style="margin-top: 16px;">BLOCKING</span>
+    </div>
+    <div class="glass-card">
+      <div class="stat-label" style="margin-bottom: 12px;">DECISION 03</div>
+      <h3 style="margin-bottom: 12px;">Finalize pricing.</h3>
+      <p style="color: var(--secondary); font-size: 0.95rem; line-height: 1.5;">
+        Review the suggested pricing deck with Wale. Lock the three tiers, the
+        à la carte rules, and the mentorship one-time structure.
+      </p>
+      <span class="pill pill-amber" style="margin-top: 16px;">BLOCKING</span>
+    </div>
+  </div>
+
+  <div class="glass-panel" style="margin-top: 32px; text-align: center; background: linear-gradient(135deg, rgba(74, 140, 255, 0.05), rgba(162, 89, 255, 0.05));">
+    <h3 style="margin-bottom: 16px;">Once those three are done, the build starts.</h3>
+    <p style="color: var(--secondary); max-width: 600px; margin: 0 auto 24px;">
+      Week 1: pull repo · Week 2: bridge live · Week 3: dashboard live · Week 4: classroom live.
+    </p>
+    <div class="hero-cta-row" style="justify-content: center;">
+      <button class="btn-primary">Execute the merge →</button>
+    </div>
+  </div>
+</section>
+
+<footer class="deck-footer">
+  ASCENSION × VERSTIGE OS MERGE · STRATEGY BRIEF · CONFIDENTIAL · PREPARED JUNE 24 2026<br/>
+  VERSTIGE OS · WALLSTREETWALE · GENESIS FX
+</footer>
+
+<script>
+  // ============== PROGRESS TRACKER ==============
+  const slides = document.querySelectorAll('section.slide');
+  const fill = document.getElementById('progressFill');
+  const label = document.getElementById('progressLabel');
+  const total = slides.length;
+
+  function updateProgress() {
+    const scrollY = window.scrollY;
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = Math.min(1, Math.max(0, scrollY / docH));
+    fill.style.width = (ratio * 100) + '%';
+    const currentSlide = Math.min(total, Math.max(1, Math.ceil(ratio * total) || 1));
+    label.textContent = String(currentSlide).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+</script>
+
+</body>
+</html>
